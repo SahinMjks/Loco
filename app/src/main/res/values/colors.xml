@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="primary_green">#00FF00</color>
+    <color name="secondary_green">#32CD32</color>
+    <color name="primary_blue">#0000FF</color>
+    <color name="secondary_blue">#1E90FF</color>
+    <color name="lime_green_primary">#00FF00</color>
+    <color name="lime_green_secondary">#ADFF2F</color>
+    <color name="sky_blue_primary">#87CEEB</color>
+    <color name="sky_blue_secondary">#00BFFF</color>
+    <color name="olive_green_primary">#808000</color>
+    <color name="olive_green_secondary">#6B8E23</color>
+    <color name="teal_primary">#008080</color>
+    <color name="teal_secondary">#40E0D0</color>
+    <color name="turquoise_primary">#40E0D0</color>
+    <color name="turquoise_secondary">#00CED1</color>
+    <color name="forest_green_primary">#228B22</color>
+    <color name="forest_green_secondary">#556B2F</color>
+    <color name="navy_blue_primary">#000080</color>
+    <color name="navy_blue_secondary">#00008B</color>
+    <color name="aqua_primary">#00FFFF</color>
+    <color name="aqua_secondary">#7FFFD4</color>
+
+</resources>

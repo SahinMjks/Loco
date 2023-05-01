@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">Loco_V1</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="tab1_title">Chat</string>
+    <string name="tab2_title">Posts</string>
+    <string name="tab3_title">Lost And Found</string>
+    <string name="tab4_title">Market Place</string>
+    <string-array name="filter_options">
+        <item>All</item>
+        <item>Lost Items</item>
+        <item>Found Items</item>
+    </string-array>
+    <string-array name="category_options">
+        <item>Clothing</item>
+        <item>Electronics</item>
+        <item>Furniture</item>
+        <item>Home and Kitchen</item>
+        <item>Sports and Outdoors</item>
+        <item>Tools and Home Improvement</item>
+        <item>Toys and Games</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="sort_options">
+        <item>Price: High to Low</item>
+        <item>Price: Low to High</item>
+        <item>Newest First</item>
+        <item>Oldest First</item>
+    </string-array>
+
+    <!-- Search hint -->
+    <string name="search_hint">Search for an item...</string>
+
+
+</resources>

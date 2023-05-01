@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/splash_screen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#CDF4AB">
+
+    <!-- View pager for intro screen pages -->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager_intro"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Tab layout for intro screen dots -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout_intro_dots"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/transparent"
+        app:tabIndicatorHeight="0dp"
+        app:tabGravity="center"
+        app:tabMode="fixed">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_item_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/lime_green_secondary" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_item_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/primary_blue" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_item_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/primary_blue" />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <!-- "Next" button -->
+
+    <!-- "Get Started" button -->
+    <ImageButton
+        android:id="@+id/button_get_started"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_above="@id/tab_layout_intro_dots"
+        android:layout_below="@id/view_pager_intro"
+        android:src="@drawable/ic_next"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:background="@color/lime_green_secondary" />
+
+</RelativeLayout>

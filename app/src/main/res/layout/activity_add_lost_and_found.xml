@@ -1,0 +1,145 @@
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:padding="2dp"
+    android:background="#E5EFDC"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_marginRight="10dp"
+                android:layout_gravity="center_vertical"/>
+
+            <EditText
+                android:id="@+id/item_name_edit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Name of the Item"
+                android:textColor="@color/lime_green_secondary"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+
+
+        <RadioGroup
+            android:id="@+id/item_type_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/lost_radio_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/olive_green_secondary"
+                android:text="Lost"/>
+
+            <RadioButton
+                android:id="@+id/found_radio_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/olive_green_secondary"
+
+                android:text="Found"/>
+        </RadioGroup>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="#ABABAB"
+            android:layout_marginVertical="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Item Description"
+            android:textColor="@color/olive_green_primary"
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:id="@+id/item_description_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapSentences|textMultiLine"
+            android:hint="Enter description here"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Item Image"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/olive_green_primary"
+            android:textSize="18sp"/>
+
+        <ImageView
+            android:id="@+id/choose_image_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/ic_lost"
+            android:clickable="true"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/image_border"
+            android:contentDescription="Item image"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/olive_green_primary"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:id="@+id/time_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:focusable="true"
+            android:hint="Select time"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:textColor="@color/olive_green_primary"
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:id="@+id/location_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:focusable="true"
+            android:hint="Select location"
+            android:layout_marginBottom="16dp"/>
+
+        <ImageButton
+            android:id="@+id/create_button"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_add" />
+
+    </LinearLayout>
+</ScrollView>
+
