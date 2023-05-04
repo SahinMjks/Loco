@@ -22,6 +22,12 @@
         android:theme="@style/Theme.Loco_V1"
         tools:targetApi="31">
         <activity
+            android:name=".Experimental_Activity"
+            android:exported="false" />
+        <activity
+            android:name=".OthersProfile"
+            android:exported="false" />
+        <activity
             android:name=".MarketPlace_Sell"
             android:exported="false" />
         <activity

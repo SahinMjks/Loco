@@ -20,6 +20,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,6 +42,9 @@ public class MarketPlace_Sell extends AppCompatActivity {
     private Spinner itemCategorySpinner;
     private Button sellButton;
 
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+    String uid;
     private Uri mImageUri;
     private StorageReference mStorageRef;
     private ProgressDialog mProgressDialog;
@@ -48,6 +53,7 @@ public class MarketPlace_Sell extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private int requestCode;
     private int resultCode;
+    String selectedCategory;
 
     @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Override
@@ -55,12 +61,23 @@ public class MarketPlace_Sell extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_market_place_sell);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        //Getting the user list
+
+        // getting current user
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        uid=firebaseUser.getUid();
+
         itemImage = findViewById(R.id.item_image);
         itemNameEditText = findViewById(R.id.item_title);
         itemDescriptionEditText = findViewById(R.id.item_description);
         itemPriceEditText = findViewById(R.id.item_price);
         itemCategorySpinner = findViewById(R.id.category_spinner);
         sellButton = findViewById(R.id.sell_button);
+        Spinner spinner = findViewById(R.id.category_spinner);
+        selectedCategory= spinner.getSelectedItem().toString();
+
 
 
         mStorageRef = FirebaseStorage.getInstance().getReference("uploads");
@@ -91,7 +108,16 @@ public class MarketPlace_Sell extends AppCompatActivity {
         String itemDescription = itemDescriptionEditText.getText().toString().trim();
 
 
-        String price = itemPriceEditText.getText().toString().trim();
+        String price= itemPriceEditText.getText().toString().trim();
+        int price_int=0;
+
+        try {
+            price_int= Integer.parseInt(price);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input: " +price);
+        }
+
+
         // Get current date and time
         Calendar calendar = Calendar.getInstance();
         Date currentDate = calendar.getTime();
@@ -117,19 +143,22 @@ public class MarketPlace_Sell extends AppCompatActivity {
         }
 
         if (price.isEmpty()) {
-            itemPriceEditText.setError("Time is required");
+            itemPriceEditText.setError("Price is required");
             itemPriceEditText.requestFocus();
             return;
         }
+
 
         // Create a new LostAndFoundItem object
         Model_MarketPlaceItem item = new Model_MarketPlaceItem();
         item.setItemName(itemName);
         item.setItemDescription(itemDescription);
-        item.setPrice(price);
-        //item.setTime(time);
+        item.setPrice(price_int);
+        item.setTime(dateString);
         item.setImageUrl(String.valueOf(mImageUri));
-
+        item.setSold(false);
+        item.setUserId(uid);
+        item.setCategory(selectedCategory);
         // Add the item to the Firebase Realtime Database
         DatabaseReference itemsRef = FirebaseDatabase.getInstance().getReference("MarketPlace");
         String itemId = itemsRef.push().getKey();

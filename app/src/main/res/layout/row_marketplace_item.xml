@@ -5,14 +5,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="4dp"
     android:elevation="1dp"
-    app:cardCornerRadius="10dp"
-    app:cardBackgroundColor="#A6E6A6"
+    app:cardCornerRadius="20dp"
+    app:cardBackgroundColor="@color/white"
     android:orientation="vertical"
-    android:padding="2dp">
+    android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -22,6 +23,13 @@
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_lost" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingLeft="10dp"
+            android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -59,7 +67,7 @@
                 android:ellipsize="end"
                 android:maxLines="2"
                 android:text="In Ver Good Condition Right Now"
-                android:textColor="@color/lime_green_primary"
+                android:textColor="@color/olive_green_primary"
                 android:textSize="14sp" />
 
             <TextView
@@ -68,8 +76,33 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Posted 2 days ago"
-                android:textColor="@color/lime_green_secondary"
+                android:textColor="@color/primary_green"
                 android:textSize="12sp" />
+
+        </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dp"
+                android:orientation="vertical">
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    app:cardBackgroundColor="@color/white"
+                    android:backgroundTint="@color/white"
+                    android:src="@drawable/ic_chat_normal"
+                    android:id="@+id/chat_button"/>
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_cancel"
+                    android:backgroundTint="@color/white"
+                    app:cardBackgroundColor="@color/white"
+                    android:id="@+id/sold_button"/>
+            </LinearLayout>
 
         </LinearLayout>
 

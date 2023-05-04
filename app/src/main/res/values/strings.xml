@@ -23,8 +23,8 @@
         <item>Other</item>
     </string-array>
     <string-array name="sort_options">
-        <item>Price: High to Low</item>
-        <item>Price: Low to High</item>
+        <item>Price:High to Low</item>
+        <item>Price:Low to High</item>
         <item>Newest First</item>
         <item>Oldest First</item>
     </string-array>

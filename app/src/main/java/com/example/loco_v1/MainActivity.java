@@ -7,10 +7,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.format.DateFormat;
 import android.text.style.ImageSpan;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -18,8 +21,18 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
 
     private Context mContext;
+    FirebaseDatabase firebaseDatabase;
+
+    DatabaseReference users;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         mContext=this;
 
         firebaseAuth = FirebaseAuth.getInstance();
+
+        //ToDo When app will open it should show it's user's name
 
         // Create an adapter that will return a fragment for each of the four
         // primary sections of the app.
@@ -73,6 +91,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Handle the Notification button click
                 Toast.makeText(MainActivity.this, "Notification button clicked", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        findViewById(R.id.explore_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle the Notification button click
+                Toast.makeText(MainActivity.this, "Notification button clicked", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this,Experimental_Activity.class));
             }
         });
     }

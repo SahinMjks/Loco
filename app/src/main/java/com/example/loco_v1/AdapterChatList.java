@@ -68,7 +68,7 @@ public class AdapterChatList extends RecyclerView.Adapter<AdapterChatList.Myhold
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ChatActivity.class);
+                Intent intent = new Intent(context, OthersProfile.class);
 
                 // putting uid of user in extras
                 intent.putExtra("uid", hisuid);

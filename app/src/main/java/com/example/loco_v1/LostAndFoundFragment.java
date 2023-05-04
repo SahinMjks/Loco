@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -26,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class LostAndFoundFragment extends Fragment {
     FloatingActionButton fab;
@@ -33,9 +35,12 @@ public class LostAndFoundFragment extends Fragment {
     private LostAndFoundAdapter mAdapter;
     private RecyclerView recyclerView;
     private DatabaseReference mDatabase;
+
+    //SearchView is to search the item
     SearchView searchView;
-    Spinner spinner;
-    int lost;
+
+    //Initial lost value is All so that's why it's 2
+    int lost=2;
     public LostAndFoundFragment() {
         // Required empty public constructor
     }
@@ -46,46 +51,6 @@ public class LostAndFoundFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_lost_and_found, container, false);
-        loadPosts();
-        searchView=rootView.findViewById(R.id.search_view);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                if (!TextUtils.isEmpty(query)) {
-                    SearchItem(query);
-                } else {
-                    loadPosts();
-                }
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                return false;
-            }
-        });
-
-        spinner=rootView.findViewById(R.id.filter_spinner);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedOption = parent.getItemAtPosition(position).toString();
-                // Do something with the selected option
-                if(selectedOption=="Lost Items"){
-                    lost=0; //0 Means Lost Item
-                }
-                else{
-                    lost=1; //1 Means Found Item
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
-                lost=2; //Search All
-            }
-        });
-
 
         fab=rootView.findViewById(R.id.fab_create_item);
         if (fab != null) {
@@ -97,6 +62,7 @@ public class LostAndFoundFragment extends Fragment {
             });
         }
 
+        //To show the user in a recycler view
         mLostAndFoundItems = new ArrayList<>();
         mAdapter = new LostAndFoundAdapter(mLostAndFoundItems);
         recyclerView = rootView.findViewById(R.id.lost_and_found_recycler_view);
@@ -108,12 +74,60 @@ public class LostAndFoundFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(mAdapter);
 
-        // Set up database reference
-        //mDatabase = FirebaseDatabase.getInstance().getReference("lost_and_found_items");
 
-        // Listen for changes in database
+        Spinner spinner = rootView.findViewById(R.id.filter_spinner);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),R.array.filter_options,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCategory = parent.getItemAtPosition(position).toString();
+                // Do something with the selected category
+                Toast.makeText(getActivity(),selectedCategory,Toast.LENGTH_SHORT).show();
+                if(selectedCategory.equals("Lost Items")){
+                    lost=0;
+                } else if (selectedCategory.equals("Found Items")) {
+                    lost=1;
+                } else if (selectedCategory.equals("All")) {
+                    lost=2;
+                }
+                loadPosts();
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+                Toast.makeText(getActivity(),"Nothing Selected",Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
 
+        //TODO I need to merge both Search Item and Load item in one place
+        searchView=rootView.findViewById(R.id.search_view);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (!TextUtils.isEmpty(query)) {
+                    Toast.makeText(getActivity(),"Search View is not empty",Toast.LENGTH_SHORT).show();
+                    SearchItem(query);
+                } else {
+                    Toast.makeText(getActivity(),"Search View is empty",Toast.LENGTH_SHORT).show();
+                    loadPosts();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                SearchItem(newText);
+                return false;
+            }
+        });
 
         return rootView;
     }
@@ -125,7 +139,17 @@ public class LostAndFoundFragment extends Fragment {
                 mLostAndFoundItems.clear();
                 for (DataSnapshot itemSnapshot : snapshot.getChildren()) {
                     LostAndFoundItem item = itemSnapshot.getValue(LostAndFoundItem.class);
-                    mLostAndFoundItems.add(item);
+
+                    if(lost==0 && item.get_isLost() ==true){
+                        mLostAndFoundItems.add(item);
+                    }
+                    else if ((lost == 1) && item.get_isLost() ==false) {
+                        mLostAndFoundItems.add(item);
+                    }
+                    else if (lost==2) {
+                        mLostAndFoundItems.add(item);
+                    }
+
                 }
                 mAdapter.notifyDataSetChanged();
             }
@@ -147,7 +171,7 @@ public class LostAndFoundFragment extends Fragment {
                     LostAndFoundItem item = dataSnapshot1.getValue(LostAndFoundItem.class);
 
                     if (item.getItemName().toLowerCase().contains(query.toLowerCase()) ||
-                            item.getItemDescription().toLowerCase().contains(query.toLowerCase())) {
+                            item.getItemDescription().toLowerCase().contains(query.toLowerCase())||item.getItemLocation().toLowerCase().contains(query.toLowerCase())) {
                         mLostAndFoundItems.add(item);
                     }
                     mAdapter = new LostAndFoundAdapter(mLostAndFoundItems);

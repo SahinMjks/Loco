@@ -1,26 +1,32 @@
 package com.example.loco_v1;
 
 public class Model_MarketPlaceItem {
+
+
         private String id;
         private String type;
         private String itemDescription;
-        private String price;
+        private int price;
         private String time;
         private String imageUrl;
-        private Boolean isLost;
         private String itemName;
+
+        private String category;
+        private String user_id;
+        private boolean sold;
 
         public Model_MarketPlaceItem() {
             // Default constructor required for calls to DataSnapshot.getValue(LostAndFound.class)
         }
 
-        public Model_MarketPlaceItem(String id, String type, String itemDescription, String location, String time, String imageUrl) {
+        public Model_MarketPlaceItem(String id, String itemDescription, String location, String time, String imageUrl,String user_id,boolean sold,String category) {
             this.id = id;
-            this.type = type;
             this.itemDescription = itemDescription;
-            this.price = location;
             this.time = time;
             this.imageUrl = imageUrl;
+            this.user_id=user_id;
+            this.sold=sold;
+            this.category=category;
         }
 
         public String getId() {
@@ -31,12 +37,28 @@ public class Model_MarketPlaceItem {
             this.id = id;
         }
 
-        public String getType() {
-            return type;
+        public String getUserId() {
+        return id;
+    }
+
+        public void setUserId(String id) {
+        this.id = id;
+    }
+
+        public Boolean getSold() {
+            return sold;
         }
 
-        public void setType(String type) {
-            this.type = type;
+        public void setSold(boolean sold) {
+            this.sold =sold;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
         }
 
         public String getItemDescription() {
@@ -47,11 +69,11 @@ public class Model_MarketPlaceItem {
             this.itemDescription = itemDescription;
         }
 
-        public String getPrice() {
+        public int getPrice() {
             return price;
         }
 
-        public void setPrice(String price) {
+        public void setPrice(int price) {
             this.price=price;
         }
 
@@ -71,9 +93,6 @@ public class Model_MarketPlaceItem {
             this.imageUrl = imageUrl;
         }
 
-        public void setLost(boolean isLost) {
-            this.isLost = isLost;
-        }
         public void setItemName(String itemName) {
             this.itemName = itemName;
         }

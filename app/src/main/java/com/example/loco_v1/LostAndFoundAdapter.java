@@ -1,11 +1,14 @@
 package com.example.loco_v1;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,50 +21,10 @@ import java.util.List;
 public class LostAndFoundAdapter extends RecyclerView.Adapter<LostAndFoundAdapter.ItemViewHolder>{
 
     private static List<LostAndFoundItem> itemList;
-    private static  List<LostAndFoundItem> filteredItemList;
-    private static ItemFilter itemFilter;
 
     public LostAndFoundAdapter(List<LostAndFoundItem> itemList) {
         this.itemList = itemList;
-        this.filteredItemList = itemList;
-        this.itemFilter = new ItemFilter();
     }
-
-    public Filter getFilter() {
-        return itemFilter;
-    }
-    private class ItemFilter extends Filter {
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            FilterResults results = new FilterResults();
-            List<LostAndFoundItem> filteredList = new ArrayList<>();
-
-            if (constraint == null || constraint.length() == 0) {
-                filteredList = itemList;
-            } else {
-                String filterPattern = constraint.toString().toLowerCase().trim();
-
-                for (LostAndFoundItem item : itemList) {
-                    if (item.getItemName().toLowerCase().contains(filterPattern) ||
-                            item.getItemDescription().toLowerCase().contains(filterPattern)) {
-                        filteredList.add(item);
-                    }
-                }
-            }
-
-            results.values = filteredList;
-            results.count = filteredList.size();
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            filteredItemList = (List<LostAndFoundItem>) results.values;
-            notifyDataSetChanged();
-        }
-    }
-
 
     @NonNull
     @Override
@@ -73,7 +36,7 @@ public class LostAndFoundAdapter extends RecyclerView.Adapter<LostAndFoundAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-        LostAndFoundItem item = filteredItemList.get(position);
+        LostAndFoundItem item =itemList.get(position);
         holder.itemNameTextView.setText(item.getItemName());
         holder.itemDescriptionTextView.setText(item.getItemDescription());
         holder.itemLocationTextView.setText(item.getLocation());
@@ -84,6 +47,29 @@ public class LostAndFoundAdapter extends RecyclerView.Adapter<LostAndFoundAdapte
                 .placeholder(R.drawable.ic_lost)
                 .error(R.drawable.ic_error)
                 .into(holder.itemImageView);
+
+
+        final String uid= item.getUid();
+        final Boolean founded=item.getFounded();
+
+        holder.chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(),"Chat for more information",Toast.LENGTH_SHORT);
+                Intent intent = new Intent(view.getContext(), ChatActivity.class);
+
+                // putting uid of user in extras
+                intent.putExtra("uid", uid);
+                view.getContext().startActivity(intent);
+            }
+        });
+
+        holder.founded.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(),"Already Founded",Toast.LENGTH_SHORT);
+            }
+        });
     }
 
     @Override
@@ -98,6 +84,7 @@ public class LostAndFoundAdapter extends RecyclerView.Adapter<LostAndFoundAdapte
         public ImageView itemImageView;
         public TextView itemLocationTextView;
         public TextView itemDateTextView;
+        public ImageButton chat,founded;
 
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -106,6 +93,8 @@ public class LostAndFoundAdapter extends RecyclerView.Adapter<LostAndFoundAdapte
             itemImageView = itemView.findViewById(R.id.item_image_imageview);
             itemLocationTextView = itemView.findViewById(R.id.item_location_textview);
             itemDateTextView = itemView.findViewById(R.id.item_date_textview);
+            chat=itemView.findViewById(R.id.chat_button);
+            founded=itemView.findViewById(R.id.cancel_button);
         }
     }
 }

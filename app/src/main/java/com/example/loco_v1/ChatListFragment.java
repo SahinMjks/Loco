@@ -45,10 +45,9 @@ public class ChatListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat_list, container, false);
         firebaseAuth = FirebaseAuth.getInstance();
-        //Getting the user list
-
         // getting current user
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
         recyclerView = view.findViewById(R.id.chatlistrecycle);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false));
@@ -78,34 +77,34 @@ public class ChatListFragment extends Fragment {
         user_recycler_view.setHasFixedSize(true);
         user_recycler_view.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false));
         users = new ArrayList<>();
-        getAllUsers();
+        //getAllUsers();
         return view;
 
     }
 
-    private void getAllUsers() {
-        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                users.clear();
-                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
-                    ModelUsers modelUsers = dataSnapshot1.getValue(ModelUsers.class);
-                    if (modelUsers.getUid() != null && !modelUsers.getUid().equals(firebaseUser.getUid())) {
-                        users.add(modelUsers);
-                    }
-                    adapterUsers = new AdapterUsers(getActivity(), users);
-                    recyclerView.setAdapter(adapterUsers);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
+//    private void getAllUsers() {
+//        final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+//        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
+//        reference.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                users.clear();
+//                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+//                    ModelUsers modelUsers = dataSnapshot1.getValue(ModelUsers.class);
+//                    if (modelUsers.getUid() != null && !modelUsers.getUid().equals(firebaseUser.getUid())) {
+//                        users.add(modelUsers);
+//                    }
+//                    adapterUsers = new AdapterUsers(getActivity(), users);
+//                    recyclerView.setAdapter(adapterUsers);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
+//    }
 
     // loading the user chat layout using chat node
     private void loadChats() {

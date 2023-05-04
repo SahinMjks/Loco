@@ -69,6 +69,7 @@ public class ChatActivity extends AppCompatActivity {
     List<ModelChat> chatList;
     AdapterChat adapterChat;
 
+
     private static final int IMAGEPICK_GALLERY_REQUEST = 300;
     private static final int IMAGE_PICKCAMERA_REQUEST = 400;
     private static final int CAMERA_REQUEST = 100;
@@ -95,6 +96,8 @@ public class ChatActivity extends AppCompatActivity {
         send = findViewById(R.id.sendmsg);
         attach = findViewById(R.id.attachbtn);
         back=findViewById(R.id.back_button);
+        toolbar=findViewById(R.id.toolbar);
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
@@ -102,6 +105,21 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         uid = getIntent().getStringExtra("uid");
+
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(),"Chat for more information",Toast.LENGTH_SHORT);
+                Intent intent = new Intent(ChatActivity.this, OthersProfile.class);
+
+                // putting uid of user in extras
+                intent.putExtra("uid", uid);
+                ChatActivity.this.startActivity(intent);
+            }
+        });
+
+        Toast.makeText(ChatActivity.this,"Sender id:"+uid,Toast.LENGTH_SHORT);
+        Toast.makeText(ChatActivity.this,"My id :"+uid,Toast.LENGTH_SHORT);
 
         // getting uid of another user using intent
         firebaseDatabase = FirebaseDatabase.getInstance();

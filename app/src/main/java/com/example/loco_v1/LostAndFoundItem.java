@@ -8,8 +8,10 @@ public class LostAndFoundItem {
     private String location;
     private String time;
     private String imageUrl;
-    private Boolean isLost;
+    private Boolean _isLost;
     private String itemName;
+    private String uid;
+    private Boolean founded;
 
     public LostAndFoundItem() {
         // Default constructor required for calls to DataSnapshot.getValue(LostAndFound.class)
@@ -32,12 +34,27 @@ public class LostAndFoundItem {
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+    public String getUid() {
+        return uid;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public Boolean getFounded(){
+        return founded;
+    }
+
+    public void setFounded(boolean founded){
+        this.founded=founded;
+    }
+    public Boolean get_isLost() {
+        return _isLost;
+    }
+
+    public void set_isLost(Boolean _isLost) {
+        this._isLost = _isLost;
     }
 
     public String getItemDescription() {
@@ -72,9 +89,7 @@ public class LostAndFoundItem {
         this.imageUrl = imageUrl;
     }
 
-    public void setLost(boolean isLost) {
-        this.isLost = isLost;
-    }
+
     public void setItemName(String itemName) {
         this.itemName = itemName;
     }

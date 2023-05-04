@@ -22,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,6 +42,10 @@ public class Add_lost_and_found extends AppCompatActivity {
     private int requestCode;
     private int resultCode;
 
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+
+    String uid;
     @SuppressLint({"WrongViewCast", "MissingInflatedId"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,14 @@ public class Add_lost_and_found extends AppCompatActivity {
         mItemImageView=findViewById(R.id.choose_image_button);
         mCreateButton=findViewById(R.id.create_button);
         back_button=findViewById(R.id.back_button);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        //Getting the user list
+
+        // getting current user
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        uid=firebaseUser.getUid();
 
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,12 +137,20 @@ public class Add_lost_and_found extends AppCompatActivity {
 
         // Create a new LostAndFoundItem object
         LostAndFoundItem item = new LostAndFoundItem();
-        item.setLost(isLost);
         item.setItemName(itemName);
         item.setItemDescription(itemDescription);
         item.setLocation(location);
         item.setTime(time);
         item.setImageUrl(String.valueOf(mImageUri));
+        item.setUid(uid);
+        item.setFounded(false);
+        if(isLost==true){
+            item.set_isLost(true);
+        }
+        else{
+            item.set_isLost(false);
+        }
+
 
         // Add the item to the Firebase Realtime Database
         DatabaseReference itemsRef =FirebaseDatabase.getInstance().getReference("lost_and_found_items");
