@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:cardBackgroundColor="#A6E6A6"
+    app:cardBackgroundColor="#fff"
     android:layout_margin="0dp"
     app:cardCornerRadius="10dp"
     app:cardElevation="0dp"
@@ -140,8 +140,9 @@
                 android:id="@+id/like"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="#A6E6A6"
+                android:background="@color/white"
                 android:layout_marginLeft="4dp"
+                android:src="@drawable/ic_happy"
                 android:layout_gravity="center_vertical"
                 android:padding="5dp" />
 
@@ -149,7 +150,7 @@
                 android:id="@+id/comment"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:background="#A6E6A6"
+                android:background="@color/white"
                 android:layout_marginLeft="270dp"
                 android:layout_gravity="center_vertical"
                 android:src="@drawable/ic_comment"/>

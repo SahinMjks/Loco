@@ -42,7 +42,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Start main activity
-                Intent intent = new Intent(SplashScreen.this,RegistrationActivity.class);
+                Intent intent = new Intent(SplashScreen.this,LoginActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -60,7 +60,7 @@ public class SplashScreen extends AppCompatActivity {
             public void run() {
                 FirebaseUser user = mAuth.getCurrentUser();
                 if (user == null) {
-                    Intent intent = new Intent(SplashScreen.this, RegistrationActivity.class);
+                    Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
@@ -70,6 +70,6 @@ public class SplashScreen extends AppCompatActivity {
                     finish();
                 }
             }
-        }, 5000);
+        }, 3000);
     }
 }

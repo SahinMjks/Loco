@@ -1,23 +1,22 @@
 package com.example.loco_v1;
 
-
-
-
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import android.util.Patterns;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,26 +29,72 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 
-public class RegistrationActivity extends AppCompatActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link SignUp_Fragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class SignUp_Fragment extends Fragment {
+
+    // TODO: Rename parameter arguments, choose names that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
+
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
 
     private EditText email, password, name;
-    private ImageButton mRegister;
+    private ImageView mRegister;
     private TextView existaccount;
     private ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
 
+    public SignUp_Fragment() {
+        // Required empty public constructor
+    }
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 Parameter 1.
+     * @param param2 Parameter 2.
+     * @return A new instance of fragment SignUp_Fragment.
+     */
+    // TODO: Rename and change types and number of parameters
+    public static SignUp_Fragment newInstance(String param1, String param2) {
+        SignUp_Fragment fragment = new SignUp_Fragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
     @SuppressLint("MissingInflatedId")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registration);
-        email = findViewById(R.id.email_field);
-        name = findViewById(R.id.name_field);
-        password = findViewById(R.id.password_field);
-        mRegister = findViewById(R.id.signup_button);
-        existaccount = findViewById(R.id.existed_account);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view= inflater.inflate(R.layout.fragment_sign_up_, container, false);
+
+        email = view.findViewById(R.id.email_field);
+        name = view.findViewById(R.id.name_field);
+        password = view.findViewById(R.id.password_field);
+        mRegister = view.findViewById(R.id.signup_button);
         mAuth = FirebaseAuth.getInstance();
-        progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Register");
 
         mRegister.setOnClickListener(new View.OnClickListener() {
@@ -69,12 +114,10 @@ public class RegistrationActivity extends AppCompatActivity {
                 }
             }
         });
-        existaccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(RegistrationActivity.this, LoginActivity.class));
-            }
-        });
+
+
+
+        return view;
     }
 
     private void registerUser(String emaill, final String pass, final String uname) {
@@ -98,28 +141,22 @@ public class RegistrationActivity extends AppCompatActivity {
                     FirebaseDatabase database = FirebaseDatabase.getInstance();
                     DatabaseReference reference = database.getReference("Users");
                     reference.child(uid).setValue(hashMap);
-                    Toast.makeText(RegistrationActivity.this, "Registered User " + user.getEmail(), Toast.LENGTH_LONG).show();
-                    Intent mainIntent = new Intent(RegistrationActivity.this, MainActivity.class);
+                    Toast.makeText(getActivity(), "Registered User " + user.getEmail(), Toast.LENGTH_LONG).show();
+                    Intent mainIntent = new Intent(getActivity(), MainActivity.class);
                     mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(mainIntent);
-                    finish();
+
                 } else {
                     progressDialog.dismiss();
-                    Toast.makeText(RegistrationActivity.this, "Error", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_LONG).show();
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(RegistrationActivity.this, "Error Occurred", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Error Occurred", Toast.LENGTH_LONG).show();
             }
         });
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return super.onSupportNavigateUp();
     }
 }

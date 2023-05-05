@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Loco_V1" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <item name="colorPrimary">@color/forest_green_secondary</item>
+        <item name="colorPrimary">@color/white</item>
     </style>
 
     <style name="Theme.Loco_V1" parent="Base.Theme.Loco_V1" />

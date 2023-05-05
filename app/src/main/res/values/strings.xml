@@ -7,6 +7,8 @@
     <string name="tab2_title">Posts</string>
     <string name="tab3_title">Lost And Found</string>
     <string name="tab4_title">Market Place</string>
+    <string name="login_title">Log In</string>
+    <string name="Signup_title">Sign Up</string>
     <string-array name="filter_options">
         <item>All</item>
         <item>Lost Items</item>
