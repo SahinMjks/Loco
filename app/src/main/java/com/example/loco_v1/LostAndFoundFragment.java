@@ -64,7 +64,7 @@ public class LostAndFoundFragment extends Fragment {
 
         //To show the user in a recycler view
         mLostAndFoundItems = new ArrayList<>();
-        mAdapter = new LostAndFoundAdapter(mLostAndFoundItems);
+        mAdapter = new LostAndFoundAdapter(getActivity(),mLostAndFoundItems);
         recyclerView = rootView.findViewById(R.id.lost_and_found_recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager;
@@ -174,7 +174,7 @@ public class LostAndFoundFragment extends Fragment {
                             item.getItemDescription().toLowerCase().contains(query.toLowerCase())||item.getItemLocation().toLowerCase().contains(query.toLowerCase())) {
                         mLostAndFoundItems.add(item);
                     }
-                    mAdapter = new LostAndFoundAdapter(mLostAndFoundItems);
+                    mAdapter = new LostAndFoundAdapter(getActivity(),mLostAndFoundItems);
                     recyclerView.setAdapter(mAdapter);
 
                 }

@@ -155,6 +155,7 @@ public class Add_lost_and_found extends AppCompatActivity {
         // Add the item to the Firebase Realtime Database
         DatabaseReference itemsRef =FirebaseDatabase.getInstance().getReference("lost_and_found_items");
         String itemId = itemsRef.push().getKey();
+        item.setId(itemId);
         itemsRef.child(itemId).setValue(item);
 
         // Show a success message

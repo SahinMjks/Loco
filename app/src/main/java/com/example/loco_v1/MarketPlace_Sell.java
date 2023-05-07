@@ -162,6 +162,7 @@ public class MarketPlace_Sell extends AppCompatActivity {
         // Add the item to the Firebase Realtime Database
         DatabaseReference itemsRef = FirebaseDatabase.getInstance().getReference("MarketPlace");
         String itemId = itemsRef.push().getKey();
+        item.setId(itemId);
         itemsRef.child(itemId).setValue(item);
 
         // Show a success message
