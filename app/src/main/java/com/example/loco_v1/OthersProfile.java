@@ -20,7 +20,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -153,7 +152,7 @@ public class OthersProfile extends AppCompatActivity {
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     ModelPost modelPost = dataSnapshot1.getValue(ModelPost.class);
                     posts.add(modelPost);
-                    adapterPosts = new AdapterPosts(OthersProfile.this, posts);
+                    adapterPosts = new AdapterPosts(OthersProfile.this,posts);
                     postrecycle.setAdapter(adapterPosts);
                 }
             }

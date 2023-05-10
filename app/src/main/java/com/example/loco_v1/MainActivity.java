@@ -1,15 +1,23 @@
 
 package com.example.loco_v1;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.DateFormat;
 import android.text.style.ImageSpan;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
 
     DatabaseReference users;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,8 +111,57 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this,Experimental_Activity.class));
             }
         });
+        findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle the Notification button click
+                showDialog();
+            }
+        });
     }
 
+    private void showDialog(){
+
+        final Dialog dialog=new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.bottomsheet_layout);
+
+        LinearLayout add_post=dialog.findViewById(R.id.linearLayout_add_post);
+        LinearLayout add_lost_and_found=dialog.findViewById(R.id.linearLayout_add_lost_and_found);
+        LinearLayout add_marketplace=dialog.findViewById(R.id.linearLayout_add_marketplace);
+
+        add_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this,"Add Post is Clicked",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this,AddBlogsFragment.class));
+            }
+        });
+
+        add_lost_and_found.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this,"Add Lost and Found is Clicked",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, Add_lost_and_found.class));
+            }
+        });
+
+        add_marketplace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this,"Add marketplace is Clicked",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, MarketPlace_Sell.class));
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations=R.style.DialogAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+
+
+    }
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {

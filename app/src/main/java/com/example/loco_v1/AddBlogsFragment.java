@@ -78,6 +78,7 @@ public class AddBlogsFragment extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         //Getting The Current User's Email Address
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        uid=firebaseAuth.getUid();
         email = currentUser.getEmail();
         context=AddBlogsFragment.this;
 
@@ -320,7 +321,7 @@ public class AddBlogsFragment extends AppCompatActivity {
 
                     // set the data into firebase and then empty the title ,description and image data
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
-                    databaseReference.child(timestamp).setValue(hashMap)
+                    databaseReference.child(uid+timestamp).setValue(hashMap)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {

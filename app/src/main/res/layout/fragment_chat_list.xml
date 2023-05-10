@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChatListFragment">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- User Recycler View -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/user_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#DBFAC2"
-        tools:listitem="@layout/row_users" />
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:scrollbars="none"
+        tools:listitem="@layout/row_users"/>
 
+    <!-- Post Recycler View -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatlistrecycle"
+        android:id="@+id/chatlist_recycler_view"
         android:layout_width="match_parent"
-        android:layout_below="@id/user_recycler_view"
-        android:background="#DBFAC2"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/row_chatlist" />
+        android:layout_weight="1"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/row_chatlist"/>
 
-</FrameLayout>
+
+
+</LinearLayout>

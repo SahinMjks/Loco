@@ -1,28 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="10dp"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar" />
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_below="@id/tab_layout"
+    <Button
+        android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="0dp"
-        android:clipToPadding="false"
-        android:padding="0dp"
-        android:paddingTop="10dp"
-        android:layout_marginTop="10dp"
-        android:overScrollMode="never" />
-
-
-
-</RelativeLayout>
+        android:text="Button"
+        android:clickable="true"
+        android:layout_gravity="center"
+        android:textColor="@color/black"/>
+</LinearLayout>

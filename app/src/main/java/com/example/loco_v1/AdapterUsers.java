@@ -54,14 +54,14 @@ public class AdapterUsers extends RecyclerView.Adapter<AdapterUsers.MyHolder> {
         } catch (Exception e) {
         }
 
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent=new Intent(holder.itemView.getContext(),OthersProfile.class);
-//                intent.putExtra("uid",hisuid);
-//                holder.itemView.getContext().startActivity(intent);
-//            }
-//        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(holder.itemView.getContext(),OthersProfile.class);
+                intent.putExtra("uid",hisuid);
+                holder.itemView.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override

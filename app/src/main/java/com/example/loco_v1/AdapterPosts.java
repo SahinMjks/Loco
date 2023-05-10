@@ -5,10 +5,15 @@ package com.example.loco_v1;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,7 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -40,7 +49,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,13 +59,41 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
 
+    //Post Details Activity Part variable
+    String hisuid, ptime, myuid, myname, myemail, mydp, plike, hisdp, hisname;
+
+    //U_image is to show the actual posted image
+    ImageView picture, image;
+    TextView name, time, title, description, like, tcomment;
+    Button likebtn, share;
+    ImageButton more;
+    LinearLayout profile;
+    EditText comment;
+    ImageButton sendb;
+    RecyclerView post_details_recyclerView;
+    List<ModelComment> commentList;
+    AdapterComment adapterComment;
+    ImageView imagep;
+    boolean mlike = false;
+    ActionBar actionBar;
+    ProgressDialog progressDialog;
+
+    //post Liked by
 
     Context context;
-    String myuid;
+    RecyclerView recyclerView;
+    String postId;
+    List<ModelUsers> list;
+    AdapterUsers adapterUsers;
+    FirebaseAuth firebaseAuth;
+
+    String pid;
     private DatabaseReference liekeref, postref;
     boolean mprocesslike = false;
 
-    public AdapterPosts(Context context, List<ModelPost> modelPosts) {
+
+
+    public AdapterPosts(Context context,List<ModelPost> modelPosts) {
         this.context = context;
         this.modelPosts = modelPosts;
         myuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -83,10 +122,16 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         //This is where the Problem is, user's dp is not showing
         String dp = modelPosts.get(position).getUdp();
         String plike = modelPosts.get(position).getPlike();
-        final String image = modelPosts.get(position).getUimage();
-        String email = modelPosts.get(position).getUemail();
+
+        //Post image
+        final String u_image = modelPosts.get(position).getUimage();
+
+        Toast.makeText(context,"Inside OnBind: "+u_image,Toast.LENGTH_SHORT).show();
+
         String comm = modelPosts.get(position).getPcomments();
-        final String pid = modelPosts.get(position).getPtime();
+        pid = ptime;
+        postId=ptime;
+
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(Long.parseLong(ptime));
         String timedate = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
@@ -105,16 +150,15 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         }
         holder.image.setVisibility(View.VISIBLE);
         try {
-            Glide.with(context).load(image).into(holder.image);
+            Glide.with(context).load(u_image).into(holder.image);
         } catch (Exception e) {
 
         }
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(holder.itemView.getContext(), PostLikedByActivity.class);
-                intent.putExtra("pid", pid);
-                holder.itemView.getContext().startActivity(intent);
+
+                show_like_Dialog();
             }
         });
         holder.likebtn.setOnClickListener(new View.OnClickListener() {
@@ -151,45 +195,399 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
         holder.more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showMoreOptions(holder.more, uid, myuid, ptime, image);
+                showMoreOptions(holder.more,uid,myuid, ptime,u_image);
             }
         });
-//        holder.comment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(context, PostDetailsActivity.class);
-//                intent.putExtra("pid", ptime);
-//                context.startActivity(intent);
-//            }
-//        });
+        holder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    show_details_dialog(u_image);
+            }
+        });
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(context,PostDetailsActivity.class);
-                intent.putExtra("pid",pid);
-                context.startActivity(intent);
+                    show_details_dialog(u_image);
             }
         });
-//        holder.picture.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent=new Intent(context,OthersProfile.class);
-//                intent.putExtra("uid",uid);
-//                //Toast.makeText(context,uid,Toast.LENGTH_SHORT).show();
-//                holder.itemView.getContext().startActivity(intent);
-//            }
-//        });
+        holder.picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(context,OthersProfile.class);
+                intent.putExtra("uid",uid);
+                holder.itemView.getContext().startActivity(intent);
+            }
+        });
+    }
+
+    private void show_details_dialog(String u_image){
+        final Dialog dialog=new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.activity_post_details);
+
+
+
+        post_details_recyclerView = dialog.findViewById(R.id.recyclecomment);
+        //picture is for dp
+        picture = dialog.findViewById(R.id.pictureco);
+        //this is the image i've posted
+        image = dialog.findViewById(R.id.pimagetvco);
+        name = dialog.findViewById(R.id.unameco);
+        time = dialog.findViewById(R.id.utimeco);
+        more = dialog.findViewById(R.id.morebtn);
+        title = dialog.findViewById(R.id.ptitleco);
+
+        myemail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        myuid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        description = dialog.findViewById(R.id.descriptco);
+        tcomment = dialog.findViewById(R.id.pcommenttv);
+        like = dialog.findViewById(R.id.plikebco);
+        likebtn = dialog.findViewById(R.id.like);
+        comment = dialog.findViewById(R.id.typecommet);
+        sendb = dialog.findViewById(R.id.sendcomment);
+        imagep = dialog.findViewById(R.id.commentimge);
+        share = dialog.findViewById(R.id.share);
+
+        //Need to check this
+        profile = dialog.findViewById(R.id.profilelayout);
+        progressDialog = new ProgressDialog(context);
+        loadPostInfo(u_image);
+
+        loadUserInfo();
+        setLikes();
+        //actionBar.setSubtitle("SignedInAs:" + myemail);
+        loadComments();
+        sendb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                postComment();
+            }
+        });
+        likebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                likepost();
+            }
+        });
+        like.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                show_like_Dialog();
+            }
+        });
+
+        dialog.show();
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) (getScreenHeight(dialog) * 0.9));
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.getAttributes().windowAnimations = R.style.DialogAnimation;
+            window.setGravity(Gravity.BOTTOM);
+        }
+    }
+    private void loadComments() {
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
+        post_details_recyclerView.setLayoutManager(layoutManager);
+        commentList = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                commentList.clear();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    ModelComment modelComment = dataSnapshot1.getValue(ModelComment.class);
+                    commentList.add(modelComment);
+                    adapterComment = new AdapterComment(context, commentList, myuid, postId);
+                    post_details_recyclerView.setAdapter(adapterComment);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void setLikes() {
+        final DatabaseReference liekeref = FirebaseDatabase.getInstance().getReference().child("Likes");
+        liekeref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.child(postId).hasChild(myuid)) {
+                    likebtn.setText("Liked");
+                } else {
+                    likebtn.setText("Like");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void likepost() {
+
+        mlike = true;
+        final DatabaseReference liekeref = FirebaseDatabase.getInstance().getReference().child("Likes");
+        final DatabaseReference postref = FirebaseDatabase.getInstance().getReference().child("Posts");
+        liekeref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (mlike) {
+                    if (dataSnapshot.child(postId).hasChild(myuid)) {
+                        postref.child(postId).child("plike").setValue("" + (Integer.parseInt(plike) - 1));
+                        liekeref.child(postId).child(myuid).removeValue();
+                        mlike = false;
+
+                    } else {
+                        postref.child(postId).child("plike").setValue("" + (Integer.parseInt(plike) + 1));
+                        liekeref.child(postId).child(myuid).setValue("Liked");
+                        mlike = false;
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+    private void postComment() {
+        progressDialog.setMessage("Adding Comment");
+
+        final String commentss = comment.getText().toString().trim();
+        if (TextUtils.isEmpty(commentss)) {
+            Toast.makeText(context, "Empty comment", Toast.LENGTH_LONG).show();
+            return;
+        }
+        progressDialog.show();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        DatabaseReference datarf = FirebaseDatabase.getInstance().getReference("Posts").child(postId).child("Comments");
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("cId", timestamp);
+        hashMap.put("comment", commentss);
+        hashMap.put("ptime", timestamp);
+        hashMap.put("uid", myuid);
+        hashMap.put("uemail", myemail);
+        hashMap.put("udp", mydp);
+        hashMap.put("uname", myname);
+        datarf.child(timestamp).setValue(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                progressDialog.dismiss();
+                Toast.makeText(context, "Added", Toast.LENGTH_LONG).show();
+                comment.setText("");
+                updatecommetcount();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    boolean count = false;
+
+    private void updatecommetcount() {
+        count = true;
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts").child(postId);
+        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (count) {
+                    String comments = (String) dataSnapshot.child("pcomments").getValue();
+                    int newcomment = Integer.parseInt(comments) + 1;
+                    reference.child("pcomments").setValue("" + newcomment);
+                    count = false;
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadUserInfo() {
+
+        Query myref = FirebaseDatabase.getInstance().getReference("Users");
+        myref.orderByChild("uid").equalTo(myuid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    myname = dataSnapshot1.child("name").getValue().toString();
+                    mydp = dataSnapshot1.child("image").getValue().toString();
+                    try {
+                        Glide.with(context).load(mydp).into(imagep);
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadPostInfo(String u_image) {
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Posts");
+        Query query = databaseReference.orderByChild("ptime").equalTo(postId);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+
+                    ModelPost item=dataSnapshot1.getValue(ModelPost.class);
+                    String ptitle = dataSnapshot1.child("title").getValue().toString();
+                    String descriptions = dataSnapshot1.child("description").getValue().toString();
+                    //If there is no image we need to check it
+                    //String post_image =item.getUimage();
+                    hisdp = dataSnapshot1.child("udp").getValue().toString();
+                    hisuid = dataSnapshot1.child("uid").getValue().toString();
+                    String uemail = dataSnapshot1.child("uemail").getValue().toString();
+                    hisname = dataSnapshot1.child("uname").getValue().toString();
+                    ptime = dataSnapshot1.child("ptime").getValue().toString();
+                    plike = dataSnapshot1.child("plike").getValue().toString();
+                    String commentcount = dataSnapshot1.child("pcomments").getValue().toString();
+                    Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
+                    calendar.setTimeInMillis(Long.parseLong(ptime));
+                    String timedate = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
+                    name.setText(hisname);
+                    title.setText(ptitle);
+                    description.setText(descriptions);
+                    like.setText(plike + " Likes");
+                    time.setText(timedate);
+                    tcomment.setText(commentcount + " Comments");
+
+                    Toast.makeText(context,"Image is"+ u_image,Toast.LENGTH_SHORT).show();
+                    if(u_image!=null){
+                        if (u_image.equals("noImage")) {
+                            image.setVisibility(View.GONE);
+                        } else {
+                            image.setVisibility(View.VISIBLE);
+                            try {
+                                Glide.with(context).load(u_image).into(image);
+                            } catch (Exception e) {
+
+                            }
+                        }
+                    }
+
+                    try {
+                        Glide.with(context).load(hisdp).into(picture);
+                    } catch (Exception e) {
+
+                    }
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
-    private void showMoreOptions(ImageButton more, String uid, String myuid, final String pid, final String image) {
+    private void show_like_Dialog(){
+
+        final Dialog dialog=new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.activity_post_liked_by);
+
+
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        //actionBar.setSubtitle(firebaseAuth.getCurrentUser().getEmail());
+        recyclerView = dialog.findViewById(R.id.likerecycle);
+
+        list = new ArrayList<>();
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Likes");
+        reference.child(pid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                list.clear();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    String hisUid = "" + dataSnapshot1.getRef().getKey();
+                    getUsers(hisUid);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        dialog.show();
+//        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        dialog.getWindow().getAttributes().windowAnimations=R.style.DialogAnimation;
+//        dialog.getWindow().setGravity(Gravity.BOTTOM);
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, (int) (getScreenHeight(dialog) * 0.5));
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.getAttributes().windowAnimations = R.style.DialogAnimation;
+            window.setGravity(Gravity.BOTTOM);
+        }
+
+
+    }
+    private int getScreenHeight(Dialog dialog) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        dialog.getWindow().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.heightPixels;
+    }
+
+    private void getUsers(String hisUid) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference.orderByChild("uid").equalTo(hisUid).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    ModelUsers model = ds.getValue(ModelUsers.class);
+                    list.add(model);
+                }
+                adapterUsers = new AdapterUsers(context, list);
+                recyclerView.setAdapter(adapterUsers);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void showMoreOptions(ImageButton more,String uid,String myuid, final String pid, final String image) {
         if (context == null) {
             // Handle the error here
             Log.e(TAG, "showMoreOptions(): context is null");
             return;
         }
 
+        Toast.makeText(context,"myUID"+myuid+"PID:"+pid,Toast.LENGTH_SHORT).show();
         PopupMenu popupMenu = new PopupMenu(context, more, Gravity.END);
         if (uid != null && uid.equals(myuid)) {
             popupMenu.getMenu().add(Menu.NONE, 0, 0, "DELETE");
@@ -205,7 +603,11 @@ public class AdapterPosts extends RecyclerView.Adapter<AdapterPosts.MyHolder> {
             }
         });
         popupMenu.show();
+
     }
+
+
+
 
     private void deltewithImage(final String pid, String image) {
         final ProgressDialog pd = new ProgressDialog(context);

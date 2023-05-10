@@ -5,6 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bottom_dialog_home_bg"
+    android:padding="20dp"
     tools:context=".PostLikedByActivity">
 
     <androidx.recyclerview.widget.RecyclerView

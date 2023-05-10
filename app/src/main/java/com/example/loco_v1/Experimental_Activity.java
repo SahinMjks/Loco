@@ -1,14 +1,23 @@
 package com.example.loco_v1;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -24,76 +33,66 @@ import com.google.android.material.tabs.TabLayout;
 // Main Activity implements Adapter view
 public class Experimental_Activity extends AppCompatActivity {
 
-    private Context mContext;
+    private Button button;
 
-    private TabLayout mTabLayout;
-    private ViewPager mViewPager;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_experimental);
 
+        button=findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDialog();
+            }
+        });
 
-        mTabLayout = findViewById(R.id.tab_layout);
-        mViewPager = findViewById(R.id.view_pager);
-        mContext=this;
-
-
-        SectionsPagerAdapter_1 mSectionsPagerAdapter = new SectionsPagerAdapter_1(getSupportFragmentManager());
-
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        mViewPager.setPageTransformer(true, new ZoomOutPageTransformer());
-
-        mTabLayout.setupWithViewPager(mViewPager);
 
     }
-    public class SectionsPagerAdapter_1 extends FragmentPagerAdapter {
 
-        public SectionsPagerAdapter_1(FragmentManager fm) {
-            super(fm);
-        }
+    private void showDialog(){
 
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return new Login_Fragment();
-                case 1:
-                    return new SignUp_Fragment();
-                default:
-                    return null;
+        final Dialog dialog=new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.bottomsheet_layout);
+
+        LinearLayout add_post=dialog.findViewById(R.id.linearLayout_add_post);
+        LinearLayout add_lost_and_found=dialog.findViewById(R.id.linearLayout_add_lost_and_found);
+        LinearLayout add_marketplace=dialog.findViewById(R.id.linearLayout_add_marketplace);
+
+        add_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(Experimental_Activity.this,"Add Post is Clicked",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Experimental_Activity.this,AddBlogsFragment.class));
             }
-        }
+        });
 
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Drawable icon = null;
-            String title = null;
-            switch (position) {
-                case 0:
-                    icon = ContextCompat.getDrawable(mContext, R.drawable.ic_login);
-                    title = mContext.getString(R.string.login_title);
-
-                    break;
-                case 1:
-                    icon = ContextCompat.getDrawable(mContext, R.drawable.ic_signup);
-                    title = mContext.getString(R.string.Signup_title);
-                    break;
+        add_lost_and_found.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(Experimental_Activity.this,"Add Lost and Found is Clicked",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Experimental_Activity.this, Add_lost_and_found.class));
             }
-            SpannableStringBuilder sb = new SpannableStringBuilder("   "); // add whitespace to the left of title for padding
-            if (icon != null) {
-                icon.setBounds(0, 0, icon.getIntrinsicWidth(), icon.getIntrinsicHeight());
-                ImageSpan imageSpan = new ImageSpan(icon, ImageSpan.ALIGN_BOTTOM);
-                sb.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        });
+
+        add_marketplace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(Experimental_Activity.this,"Add marketplace is Clicked",Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(Experimental_Activity.this, MarketPlace_Sell.class));
             }
-            return sb;
-        }
+        });
+
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().getAttributes().windowAnimations=R.style.DialogAnimation;
+        dialog.getWindow().setGravity(Gravity.BOTTOM);
+
 
     }
+
 }
